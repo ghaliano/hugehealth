@@ -1,0 +1,16 @@
+<form [formGroup]="form" (ngSubmit)="search()">
+    <input type="text" formControlName="firstname" required>
+    <br>
+    <span *ngFor="let speciality of specialities">
+    <input (change)="onSpecialitiesChange($event)" type="checkbox" [value]="speciality.id" />
+    {{speciality.name}}
+
+    </span>
+    <br>
+    <button type="submit">Rechercher</button>
+</form>
+<div *ngFor="let user of users">
+
+    {{user.firstname}}
+
+</div>

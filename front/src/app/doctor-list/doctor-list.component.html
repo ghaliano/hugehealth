@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="search()">
+    <input type="text" formControlName="firstname" required>
+    <br>
+    <select multiple (change)="onSpecialitiesChange($event)">
+        <option [value]="118">allergologie ou immunologie</option>
+        <!--<option ngValue="123">chirurgie cardiaque</option>
+        <option ngValue="126">obstétrique</option>
+        <option ngValue="119">anesthésiologie</option>
+        <option ngValue="120">andrologie</option>
+-->
+    </select>
+    <br>
+    <button type="submit">Rechercher</button>
+</form>
+<div *ngFor="let user of users">
+
+    {{user.firstname}}
+
+</div>
