@@ -117,5 +117,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="hugejob" />
+    <orderEntry type="module" module-name="notebook" />
   </component>
 </module>

@@ -1,0 +1,6 @@
+<div *ngIf="msgError">{{msgError}}</div>
+<form [formGroup]="form" (ngSubmit)="login()">
+  <input type="text" formControlName="username"/>
+  <input type="text" formControlName="password"/>
+  <button type="submit">se connecter</button>
+</form>

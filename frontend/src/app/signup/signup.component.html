@@ -1,0 +1,12 @@
+<div *ngIf="msgError">{{msgError}}</div>
+<form [formGroup]="form" (ngSubmit)="signup()">
+  <input type="text" formControlName="username" placeholder="username"/><br />
+  <input type="text" formControlName="plainPassword" placeholder="plainPassword"/><br />
+  <input type="text" formControlName="firstname" placeholder="firstname"/><br />
+  <input type="text" formControlName="lastname" placeholder="lastname"/><br />
+  <input type="text" formControlName="tel" placeholder="tel"/><br />
+  <input type="text" formControlName="email" placeholder="email"/><br />
+  <input type="text" formControlName="address" placeholder="address"/><br />
+  <input type="text" formControlName="born_at" placeholder="born_at"/><br />
+  <button type="submit">S'inscrire</button>
+</form>

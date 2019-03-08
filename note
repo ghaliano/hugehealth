@@ -1,0 +1,5 @@
+la liste des docteurs
+http://127.0.0.1:8000/api/users?roles=ROLE_DOCTOR
+
+la liste des patients
+http://127.0.0.1:8000/api/users?roles=ROLE_PATIENT

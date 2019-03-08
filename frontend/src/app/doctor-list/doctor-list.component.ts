@@ -21,6 +21,13 @@ export class DoctorListComponent implements OnInit {
     constructor(private fb: FormBuilder,
                 private doctorService: DoctorService) {
 
+        this.form.controls['specialities.id'].valueChanges.subscribe((ctrl) => {
+                console.log(ctrl);
+        });
+
+        console.log(this.form.value);
+        console.log(this.form.controls['roles'].value);
+        console.log(this.form.controls['specialities.id'].value);
 
     }
 
@@ -40,7 +47,6 @@ export class DoctorListComponent implements OnInit {
         ;
 
     }
-
 
     jsonToQueryString(obj) {
         return Object.keys(obj).filter((key) => obj[key] != undefined && obj[key] != '').reduce((str, key, i) => {

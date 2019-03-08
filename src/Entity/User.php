@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ApiResource
+ * @ApiFilter(SearchFilter::class, properties={"firstname":"partial", "roles": "partial", "specialities.id": "exact"})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -62,6 +64,7 @@ class User implements UserInterface
     private $doctorRdvs;
 
     /**
+     *
      * @ORM\ManyToMany(targetEntity="App\Entity\Speciality", inversedBy="users")
      */
     private $specialities;
@@ -96,7 +99,6 @@ class User implements UserInterface
     /**
      * @var string|null
      * @ORM\Column(name="roles", type="string", length=255, nullable=true)
-     *
      */
     private $roles;
     /**
