@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,7 +18,7 @@ class SignupType extends AbstractType
             ->add('tel')
             ->add('email')
             ->add('address')
-            //->add('born_at')
+            //->add('bornAt', DateType::class)
             ->add('plainPassword')
             ->add('username')
         ;
@@ -27,6 +28,7 @@ class SignupType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'crsf_protection'=> false
         ]);
     }
 }

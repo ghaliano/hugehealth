@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Status
 {
     /**
+     * @Groups({"rdv_read"})
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -19,6 +20,7 @@ class Status
     private $id;
 
     /**
+     * @Groups({"rdv_read"})
      * @ORM\Column(type="string", length=20)
      */
     private $name;

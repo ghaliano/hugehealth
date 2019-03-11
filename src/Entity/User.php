@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user_read"}}
+ * )
  * @ApiFilter(SearchFilter::class, properties={"firstname":"partial", "roles": "partial", "specialities.id": "exact"})
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
@@ -20,38 +22,45 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_read","rdv_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read","rdv_read"})
      */
     private $firstname;
 
     /**
+     * @Groups({"user_read","rdv_read"})
      * @ORM\Column(type="string", length=255)
      */
     private $lastname;
 
     /**
+     * @Groups({"user_read"})
      * @ORM\Column(type="string", length=255)
      */
     private $tel;
 
     /**
+     * @Groups({"user_read"})
      * @ORM\Column(type="string", length=255)
      */
     private $email;
 
     /**
+     * @Groups({"user_read"})
      * @ORM\Column(type="text", nullable=true)
      */
     private $address;
 
     /**
+     * @Groups({"user_read"})
      * @ORM\Column(type="datetime")
      */
-    private $born_at;
+    private $bornAt;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Rdv", mappedBy="patient", orphanRemoval=true)
@@ -64,7 +73,7 @@ class User implements UserInterface
     private $doctorRdvs;
 
     /**
-     *
+     * @Groups({"user_read"})
      * @ORM\ManyToMany(targetEntity="App\Entity\Speciality", inversedBy="users")
      */
     private $specialities;
@@ -206,6 +215,7 @@ class User implements UserInterface
         $this->rdvs = new ArrayCollection();
         $this->doctorRdvs = new ArrayCollection();
         $this->specialities = new ArrayCollection();
+        $this->bornAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -275,12 +285,12 @@ class User implements UserInterface
 
     public function getBornAt(): ?\DateTimeInterface
     {
-        return $this->born_at;
+        return $this->bornAt;
     }
 
-    public function setBornAt(\DateTimeInterface $born_at): self
+    public function setBornAt(\DateTimeInterface $bornAt): self
     {
-        $this->born_at = $born_at;
+        $this->bornAt = $bornAt;
 
         return $this;
     }

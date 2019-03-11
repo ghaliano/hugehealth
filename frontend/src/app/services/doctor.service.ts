@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpClientModule, HttpHeaders} from "@angular/common/http";
 import {TokenService} from "./token.service";
+import {HelperService} from "./helper.service";
 
 @Injectable({
     providedIn: 'root'
@@ -9,11 +10,13 @@ export class DoctorService {
 
     constructor(
         private http: HttpClient,
-        private tokenService: TokenService) {
+        private tokenService: TokenService,
+        private helper: HelperService) {
     }
 
     search(params: any) {
-        return this.http.get('http://127.0.0.1:8000/api/users' + params)
+        return this.http.get(
+            'http://127.0.0.1:8000/api/users' + params)
 
 
     }
@@ -23,7 +26,7 @@ export class DoctorService {
             .http
             .get(
                 'http://127.0.0.1:8000/api/specialities',
-                this.tokenService.getAuthorisationHeader()
+                //this.tokenService.getAuthorisationHeader()
 
             )
             ;

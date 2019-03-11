@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder} from "@angular/forms";
 import {DoctorService} from "../services/doctor.service";
+import {HelperService} from "../services/helper.service";
 
 
 @Component({
@@ -18,7 +19,8 @@ export class DoctorListComponent implements OnInit {
 
     });
 
-    constructor(private fb: FormBuilder,
+    constructor(private helper: HelperService,
+                private fb: FormBuilder,
                 private doctorService: DoctorService) {
 
         this.form.controls['specialities.id'].valueChanges.subscribe((ctrl) => {
@@ -37,7 +39,7 @@ export class DoctorListComponent implements OnInit {
     }
 
     search() {
-        const params: any = this.jsonToQueryString(this.form.value);
+        const params: any = this.helper.jsonToQueryString(this.form.value);
         this
             .doctorService
             .search(params)
@@ -45,44 +47,6 @@ export class DoctorListComponent implements OnInit {
                 this.users = result['hydra:member'];
             });
         ;
-
-    }
-
-    jsonToQueryString(obj) {
-        return Object.keys(obj).filter((key) => obj[key] != undefined && obj[key] != '').reduce((str, key, i) => {
-            let delimiter: string, val;
-            delimiter = (i === 0) ? '?' : '&';
-            if (Array.isArray(obj[key])) {
-                key = encodeURIComponent(key);
-                let arrayVar = obj[key].reduce((str, item) => {
-                    val = item;
-                    return [str, key + "[]", '=', val, '&'].join('');
-                }, '');
-                return [str, delimiter, arrayVar].join('');
-            } else {
-                key = encodeURIComponent(key);
-                val = obj[key];
-                return [str, delimiter, key, '=', val].join('');
-            }
-        }, '');
-
-    }
-
-    onSpecialitiesChange(event: any) {
-        const tab: Array<number> = this.form.controls['specialities.id'].value;
-        const index = tab.findIndex((el) => {
-            return el == event.target.value;
-        });
-        if (index != -1){
-            tab.splice(index, 1);
-        } else {
-            tab.push(parseInt(event.target.value));
-        }
-
-        this
-            .form
-            .controls['specialities.id']
-            .patchValue(tab);
 
     }
     getSpecialities(){

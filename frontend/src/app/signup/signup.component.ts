@@ -19,7 +19,7 @@ export class SignupComponent implements OnInit {
     tel: [null],
     email: [null],
     address: [null],
-    born_at: [null]
+    bornAt: [null]
   });
 
   constructor(private fb: FormBuilder,
@@ -31,7 +31,10 @@ export class SignupComponent implements OnInit {
   }
 
   signup(){
-    this.auth.signup(this.form.value).pipe(catchError((error) => {
+    this
+        .auth
+        .signup(this.form.value)
+        .pipe(catchError((error) => {
       console.log(error);
       return throwError('Internal error');
     })).subscribe((result) => {

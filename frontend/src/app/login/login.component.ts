@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
             .pipe(catchError((error) => {
                 this.msgError = 'Bad credentials';
                 console.log(error.error);
-                throwError('error');
+                return throwError('error');
             }))
             .subscribe((result) => {
                 //service token
