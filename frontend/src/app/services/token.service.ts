@@ -20,7 +20,8 @@ export class TokenService {
     getAuthorisationHeader() {
         return {
             'headers': new HttpHeaders({
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'application/json'
             })
         }
     }

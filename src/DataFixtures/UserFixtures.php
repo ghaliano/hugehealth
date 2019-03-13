@@ -14,7 +14,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 {
     private $encoder;
     public const COUNT = 6;
+    public const DOCTORS_COUNT = 3;
+    public const PATIENTS_COUNT = 3;
     public const USER_REFERENCE = 'user';
+    public const DOCTOR_REFERENCE = 'doctor';
+    public const PATIENT_REFERENCE = 'patient';
 
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
@@ -32,6 +36,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ["roles" => ["ROLE_DOCTOR"], "password" => "Maryem", "username" => "Maryem", "firstname" => "Maryem", "lastname" => "Sehli", "email" => "ms@gmail.com", "tel" => "-", "address" => "regus center", "born_at" => new \DateTime("2000-10-10"), "specialities" => $this->getRandomSpecialities()],
             ["roles" => ["ROLE_DOCTOR"], "password" => "Ahmed", "username" => "Ahmed", "firstname" => "Ahmed", "lastname" => "Ghali", "email" => "ag@gmail.com", "tel" => "-", "address" => "regus center", "born_at" => new \DateTime("2000-10-10"), "specialities" => $this->getRandomSpecialities()],
         ];
+        $countDoctor = 0;
+        $countPatient = 0;
 
         foreach ($users as $key => $data) {
             $user = new User();
@@ -55,7 +61,22 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             $manager->persist($user);
             $manager->flush();
-            $this->addReference(self::USER_REFERENCE . $key, $user);
+
+            if ($data['roles'][0] == 'ROLE_PATIENT'){
+                $this->addReference(
+                    self::PATIENT_REFERENCE
+                    . $countPatient
+                    , $user
+                );
+                $countPatient++;
+            } else {
+                $this->addReference(
+                    self::DOCTOR_REFERENCE
+                    . $countDoctor
+                    , $user
+                );
+                $countDoctor++;
+            }
         }
     }
 

@@ -110,6 +110,18 @@ class User implements UserInterface
      * @ORM\Column(name="roles", type="string", length=255, nullable=true)
      */
     private $roles;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"user_read","rdv_read"})
+     */
+    private $longitude;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"user_read","rdv_read"})
+     */
+    private $latitude;
     /**
      * @return string|null
      */
@@ -388,4 +400,28 @@ class User implements UserInterface
     }
 
     public function getSalt(){}
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
 }

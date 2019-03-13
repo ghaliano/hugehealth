@@ -26,4 +26,15 @@ export class RdvsService {
                 this.tokenService.getAuthorisationHeader()
             );
     }
+
+    addRdv(data: any){
+        return this
+            .http
+            .post(
+                'http://127.0.0.1:8000/api/rdvs',
+                JSON.stringify(data),
+                this.tokenService.getAuthorisationHeader()
+            )
+
+    }
 }

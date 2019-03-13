@@ -38,12 +38,10 @@ export class LoginComponent implements OnInit {
             .login(this.form.value)
             .pipe(catchError((error) => {
                 this.msgError = 'Bad credentials';
-                console.log(error.error);
                 return throwError('error');
             }))
             .subscribe((result) => {
-                //service token
-                    this.router.navigate([""])
+                    this.authService.redirectIfAuthroized();
                 }
 
             );

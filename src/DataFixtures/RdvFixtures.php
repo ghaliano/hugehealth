@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Rdv;
 use App\Entity\Speciality;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -28,6 +29,7 @@ class RdvFixtures extends Fixture implements DependentFixtureInterface
             $rdv->setType($data['type']);
             $rdv->setDoctor($data['doctor']);
             $rdv->setPatient($data['patient']);
+            $rdv->setSpeciality($this->getRandomSpecialityFromDoctor($data['doctor']));
 
             $manager->persist($rdv);
             $manager->flush();
@@ -45,15 +47,23 @@ class RdvFixtures extends Fixture implements DependentFixtureInterface
     private function getRandomDoctor()
     {
         return $this->getReference(
-            UserFixtures::USER_REFERENCE
-            . rand(0, UserFixtures::COUNT - 1));
+            UserFixtures::DOCTOR_REFERENCE
+            . rand(0, UserFixtures::DOCTORS_COUNT - 1));
+    }
+
+    private function getRandomSpecialityFromDoctor(User $doctor){
+        $specialities = $doctor->getSpecialities();
+
+        return $specialities[
+            rand(0, count($specialities)-1)
+        ];
     }
 
     private function getRandomPatient()
     {
         return $this->getReference(
-            UserFixtures::USER_REFERENCE
-            . rand(0, UserFixtures::COUNT - 1));
+            UserFixtures::PATIENT_REFERENCE
+            . rand(0, UserFixtures::PATIENTS_COUNT - 1));
     }
 
 

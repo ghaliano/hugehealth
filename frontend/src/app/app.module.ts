@@ -4,7 +4,7 @@ import{DoctorService} from "./services/doctor.service";
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {DoctorListComponent} from './doctor-list/doctor-list.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { LoginComponent } from './login/login.component';
 import {TokenService} from "./services/token.service";
@@ -21,7 +21,16 @@ import {RdvsService} from "./services/rdvs.service";
 import {HelperService} from "./services/helper.service";
 import { ModalModule } from 'ngx-bootstrap/modal'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {AgmCoreModule} from "@agm/core";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import { StatsComponent } from './stats/stats.component';
+import {StatsService} from "./services/stats.service";
+import {ChartsModule} from "ng2-charts";
 
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http);
+}
 
 @NgModule({
     declarations: [
@@ -29,10 +38,12 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
         DoctorListComponent,
         LoginComponent,
         SignupComponent,
-        RdvAddComponent
+        RdvAddComponent,
+        StatsComponent
     ],
     imports: [
         BrowserModule,
+        ChartsModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         HttpClientModule,
@@ -40,6 +51,16 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
         NgSelectModule,
         FormsModule,
         NgbModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyA_omHG_CkyW4mTb8g7DsrviNFm25r0m7c'
+        }),
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory
@@ -54,7 +75,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
         RdvsService,
         DoctorService,
         TokenService,
-        AuthService
+        AuthService,
+        StatsService
     ],
     bootstrap: [AppComponent]
 })

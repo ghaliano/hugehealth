@@ -12,9 +12,10 @@ import {
     endOfMonth,
     isSameDay,
     isSameMonth,
-    addHours
+    addHours,
+    isPast, isToday, format
 } from 'date-fns';
-import {Subject} from 'rxjs';
+import {Subject, throwError} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
     CalendarEvent,
@@ -24,6 +25,9 @@ import {
 } from 'angular-calendar';
 import {RdvsService} from "../services/rdvs.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {catchError} from "rxjs/operators";
+import {AuthService} from "../services/auth.service";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 const colors: any = {
     red: {
@@ -47,6 +51,14 @@ const colors: any = {
 })
 export class RdvAddComponent implements OnInit{
     @ViewChild('modalContent') modalContent: TemplateRef<any>;
+    @ViewChild('formContent') formContent: TemplateRef<any>;
+
+    form: FormGroup = this.fb.group({
+        address: [null],
+        doctor: [null],
+        startAt: [null],
+        type: ["home-type"]
+    });
 
     view: CalendarView = CalendarView.Month;
 
@@ -83,30 +95,25 @@ export class RdvAddComponent implements OnInit{
     activeDayIsOpen: boolean = true;
 
     constructor(
+        private fb: FormBuilder,
         private route: ActivatedRoute,
-        private router: Router,
+        private authService: AuthService,
         private modal: NgbModal,
         private rdvsService: RdvsService) {
     }
 
     ngOnInit(){
         let id = 38;
+        this.form.controls['doctor'].patchValue(id);
         this.rdvsService.getRdvsByDoctor(id)
+            .pipe(catchError((error) => {
+                this.authService.redirectIfNotAuthroized(error);
+                return throwError(error);
+            }))
             .subscribe((result) => {
                 result['hydra:member'].forEach((rdv) => {
                     this.rdvs.push(
-                        {
-                            start: startOfDay(rdv.startAt),
-                            title: 'Rdv ' + rdv.patient.firstname,
-                            color: colors.red,
-                            actions: this.actions,
-                            allDay: true,
-                            resizable: {
-                                beforeStart: true,
-                                afterEnd: true
-                            },
-                            draggable: true
-                        }
+                        this.createCalendarRdv(rdv)
                     );
                 });
                 console.log(this.rdvs);
@@ -115,16 +122,13 @@ export class RdvAddComponent implements OnInit{
     }
 
     dayClicked({date, events}: { date: Date; events: CalendarEvent[] }): void {
-        if (isSameMonth(date, this.viewDate)) {
-            this.viewDate = date;
-            if (
-                (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-                events.length === 0
-            ) {
-                this.activeDayIsOpen = false;
-            } else {
-                this.activeDayIsOpen = true;
-            }
+        if (!isPast(date) || isToday(date)) {
+            console.log(format(date, 'hh:mm DD-MM-YYYY'));
+            console.log(events);
+            this.form.controls['startAt'].patchValue(format(date, 'hh:mm DD-MM-YYYY'))
+            this.modal.open(
+                this.formContent, {size: 'lg'}
+            );
         }
     }
 
@@ -141,7 +145,6 @@ export class RdvAddComponent implements OnInit{
 
     handleEvent(action: string, event: CalendarEvent): void {
         this.modalData = {event, action};
-        console.log(this.modalData);
         this.modal.open(this.modalContent, {size: 'lg'});
     }
 
@@ -158,5 +161,31 @@ export class RdvAddComponent implements OnInit{
             }
         });
         this.refresh.next();
+    }
+
+    addRdv(){
+        this
+            .rdvsService
+            .addRdv(this.form.value)
+            .subscribe((rdv) => {
+                this.modal.dismissAll();
+                this.rdvs.push(this.createCalendarRdv(rdv));
+                this.refresh.next();
+            })
+    }
+
+    createCalendarRdv(rdv){
+        return {
+            start: startOfDay(rdv.startAt),
+            title: 'Rdv ' + rdv.patient.firstname,
+            color: colors.red,
+            actions: this.actions,
+            allDay: true,
+            resizable: {
+                beforeStart: true,
+                afterEnd: true
+            },
+            draggable: true
+        };
     }
 }

@@ -66,6 +66,12 @@ class Rdv
      */
     private $doctor;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Speciality")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $speciality;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -139,6 +145,18 @@ class Rdv
     public function setDoctor(?User $doctor): self
     {
         $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getSpeciality(): ?Speciality
+    {
+        return $this->speciality;
+    }
+
+    public function setSpeciality(?Speciality $speciality): self
+    {
+        $this->speciality = $speciality;
 
         return $this;
     }

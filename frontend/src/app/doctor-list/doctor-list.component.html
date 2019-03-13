@@ -1,5 +1,7 @@
-<h1>Liste des docteurs</h1>
+<h1>{{'doctors list' | translate}}</h1>
 <form [formGroup]="form" (ngSubmit)="search()">
+
+
     <div class="row">
 
         <div class="col-4">
@@ -21,8 +23,34 @@
             <button class="btn btn-success" type="submit">Rechercher</button>
         </div>
     </div>
-</form>
-<div class="row mb-2">
+
+
+<button type="button" class ="btn btn-default btn-xs" [disabled]="displayType == 'map'" (click)="toggleDisplay('map')">
+    <i class="fa fa-globe" aria-hidden="true"></i>
+
+</button>
+<button type="button"  class ="btn btn-default btn-xs" [disabled]="displayType == 'list'" (click)="toggleDisplay('list')">
+    <i class="fa fa-list" aria-hidden="true"></i>
+</button>
+
+<div *ngIf="displayType == 'map'">
+    <agm-map [latitude]="form.controls['latitude'].value" [longitude]="form.controls['longitude'].value">
+
+        <agm-marker
+                *ngFor="let user of users"
+                [latitude]="user.latitude"
+                [longitude]="user.longitude">
+            <agm-info-window>
+                {{user.firstname }}
+                {{user.lastname}}<br />
+                {{user.tel}}
+            </agm-info-window>
+        </agm-marker>
+
+    </agm-map>
+</div>
+
+<div *ngIf="displayType == 'list'" class="row mb-2">
     <div class="col-md-6" *ngFor="let user of users">
         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">

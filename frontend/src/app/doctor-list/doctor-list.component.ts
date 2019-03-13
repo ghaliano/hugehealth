@@ -15,27 +15,41 @@ export class DoctorListComponent implements OnInit {
     form = this.fb.group({
         firstname: [null],
         'specialities.id': [[]],
-        roles: ['DOCTOR']
+        roles: ['DOCTOR'],
+        longitude: [null],
+        latitude: [null],
+        distance: [5]
 
     });
+
+    lat: number = 51.678418;
+    lng: number = 7.809007;
+    displayType: string = 'list';
 
     constructor(private helper: HelperService,
                 private fb: FormBuilder,
                 private doctorService: DoctorService) {
 
-        this.form.controls['specialities.id'].valueChanges.subscribe((ctrl) => {
-                console.log(ctrl);
-        });
+    }
 
-        console.log(this.form.value);
-        console.log(this.form.controls['roles'].value);
-        console.log(this.form.controls['specialities.id'].value);
-
+    toggleDisplay(displayType){
+        this.displayType = displayType;
     }
 
     ngOnInit() {
-        this.search();
-        this.getSpecialities();
+        if (navigator.geolocation) {
+            navigator.geolocation
+                .getCurrentPosition((position) => {
+                this.form.controls['longitude'].patchValue(position.coords.longitude);
+                this.form.controls['latitude'].patchValue(position.coords.latitude);
+                this.search();
+                this.getSpecialities();
+            }, () => {
+                    alert("Vous ne pouvez pas accéder !");
+            });
+        } else {
+            alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
+        }
     }
 
     search() {
@@ -49,7 +63,8 @@ export class DoctorListComponent implements OnInit {
         ;
 
     }
-    getSpecialities(){
+
+    getSpecialities() {
         this
             .doctorService
             .getSpecialities()
